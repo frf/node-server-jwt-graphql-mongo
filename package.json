@@ -1,6 +1,9 @@
 {
   "name": "dev4u-server",
   "version": "0.0.1",
+  "author": "Fabio Rocha",
+  "email": "fabio@fabiofarias.com.br",
+  "license": "MIT",
   "description": "Awesome project developed with TypeORM.",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",

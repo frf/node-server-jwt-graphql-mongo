@@ -18,11 +18,12 @@ export const resolvers: IResolvers = {
     }
   },
   Mutation: {
-    register: async (_, { email, password }) => {
+    register: async (_, { name, email, password }) => {
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
       let user = new User();
+      user.name = name;
       user.email = email;
       user.password = hashedPassword;
 
@@ -33,12 +34,26 @@ export const resolvers: IResolvers = {
           await getManager().save(user);
       }
       
-      // await User.create({
-      //   email,
-      //   password: hashedPassword
-      // }).save();
+      const refreshToken = sign(
+        { userId: user.id, name: user.name, count: user.count },
+        REFRESH_TOKEN_SECRET,
+        {
+          expiresIn: "7d"
+        }
+      );
 
-      return true;
+      const accessToken = sign({ userId: user.id, name: user.name }, ACCESS_TOKEN_SECRET, {
+        expiresIn: "15min"
+      });
+
+      const dataReturn = {
+        'token': accessToken,
+        'token_refresh': refreshToken
+      };
+
+      console.log(dataReturn);
+
+      return dataReturn;
     },
     login: async (_, { email, password }, { res }) => {
       const user = await User.findOne({ where: { email } });
@@ -52,20 +67,28 @@ export const resolvers: IResolvers = {
       }
 
       const refreshToken = sign(
-        { userId: user.id, count: user.count },
+        { userId: user.id, name: user.name, count: user.count },
         REFRESH_TOKEN_SECRET,
         {
           expiresIn: "7d"
         }
       );
-      const accessToken = sign({ userId: user.id }, ACCESS_TOKEN_SECRET, {
+
+      const accessToken = sign({ userId: user.id, name: user.name }, ACCESS_TOKEN_SECRET, {
         expiresIn: "15min"
       });
 
       res.cookie("refresh-token", refreshToken);
       res.cookie("access-token", accessToken);
 
-      return user;
+      const dataReturn = {
+        'token': accessToken,
+        'token_refresh': refreshToken
+      };
+
+      console.log(dataReturn);
+
+      return dataReturn;
     }
   }
 };

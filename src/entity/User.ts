@@ -16,6 +16,10 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
+  @IsNotEmpty()
+  @Column()
+  name: string;
+
   @Column("text")
   password: string;
 }
