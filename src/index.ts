@@ -3,11 +3,11 @@ import { createConnection } from "typeorm";
 import { ApolloServer } from "apollo-server-express";
 import * as express from "express";
 import * as cookieParser from "cookie-parser";
-
 import { typeDefs } from "./typeDefs";
 import { resolvers } from "./resolvers";
 import { verify } from "jsonwebtoken";
 import { ACCESS_TOKEN_SECRET } from "./constants";
+import { mongoConfig } from './config/mongo';
 
 const startServer = async () => {
   const server = new ApolloServer({
@@ -15,9 +15,12 @@ const startServer = async () => {
     typeDefs,
     resolvers,
     context: ({ req, res }: any) => ({ req, res })
-  });
+});
 
-  await createConnection();
+createConnection(mongoConfig)
+  .then(() => {
+    console.log('connection established');
+  }).catch(console.error);
 
   const app = express();
 
