@@ -3,9 +3,8 @@ import * as bcrypt from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import {validate} from "class-validator";
 import {getManager} from "typeorm";
-
 import { User } from "./entity/User";
-import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "./constants";
+import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from './config/config';
 
 export const resolvers: IResolvers = {
   Query: {
@@ -36,13 +35,13 @@ export const resolvers: IResolvers = {
       
       const refreshToken = sign(
         { userId: user.id, name: user.name, count: user.count },
-        REFRESH_TOKEN_SECRET,
+        REFRESH_TOKEN_SECRET!,
         {
           expiresIn: "7d"
         }
       );
 
-      const accessToken = sign({ userId: user.id, name: user.name }, ACCESS_TOKEN_SECRET, {
+      const accessToken = sign({ userId: user.id, name: user.name }, ACCESS_TOKEN_SECRET!, {
         expiresIn: "15min"
       });
 
@@ -68,13 +67,13 @@ export const resolvers: IResolvers = {
 
       const refreshToken = sign(
         { userId: user.id, name: user.name, count: user.count },
-        REFRESH_TOKEN_SECRET,
+        REFRESH_TOKEN_SECRET!,
         {
           expiresIn: "7d"
         }
       );
 
-      const accessToken = sign({ userId: user.id, name: user.name }, ACCESS_TOKEN_SECRET, {
+      const accessToken = sign({ userId: user.id, name: user.name }, ACCESS_TOKEN_SECRET!, {
         expiresIn: "15min"
       });
 

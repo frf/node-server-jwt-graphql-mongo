@@ -6,7 +6,7 @@ import * as cookieParser from "cookie-parser";
 import { typeDefs } from "./typeDefs";
 import { resolvers } from "./resolvers";
 import { verify } from "jsonwebtoken";
-import { ACCESS_TOKEN_SECRET } from "./constants";
+import { ACCESS_TOKEN_SECRET } from './config/config';
 import { mongoConfig } from './config/mongo';
 
 const startServer = async () => {
@@ -29,7 +29,7 @@ createConnection(mongoConfig)
   app.use((req, _, next) => {
     const accessToken = req.cookies["access-token"];
     try {
-      const data = verify(accessToken, ACCESS_TOKEN_SECRET) as any;
+      const data = verify(accessToken, ACCESS_TOKEN_SECRET!) as any;
       (req as any).userId = data.userId;
     } catch {}
     next();
