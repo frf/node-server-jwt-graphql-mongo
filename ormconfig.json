@@ -1,6 +1,4 @@
 {
-  "type": "mongodb",
-  "url": "mongodb+srv://teste:7uROi25QIvAuSv9T@cluster0.3avtk.mongodb.net/teste",
   "useNewUrlParser": true,
   "useUnifiedTopology": true,
   "synchronize": true,
